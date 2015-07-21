@@ -15,3 +15,4 @@ sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb	# user, group, etc
 # Remove Scratch Shortcuts if they're there.
 sudo rm /home/pi/Desktop/BrickPi_Scratch_Start.desktop
 sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop
+sudo rm /home/pi/Desktop/Scratch.desktop
