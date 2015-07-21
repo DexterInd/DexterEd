@@ -4,7 +4,10 @@ import pickle
 from datetime import datetime
 import subprocess
 from collections import Counter
- 
+import threading
+import psutil
+import signal
+
 # Commenting
 # Test
 # Space out commands.
@@ -15,11 +18,6 @@ from collections import Counter
 # ComboBoxes!  		http://wiki.wxpython.org/AnotherTutorial#wx.ComboBox
 # dfu-programmer:  	http://dfu-programmer.github.io/
 
-# key_map_on_startup = ['17']*11#, '20', '20', '20', '20', '20', '20', '20', '20', '20', '20']		# This is the default list now.
-# key_map=['0','0','0','0','0','0','0','0','0','0','0']
-# map=['L1 L2','R1 R2','UP DOWN','RIGHT LEFT','TRI X','O SQR','JLX','JLY','JRX','JRY','Servo Speed']
-# total_inp=10
-
 # Writes debug to file "error_log"
 def write_debug(in_string):
 	# In in time logging.
@@ -29,14 +27,31 @@ def write_debug(in_string):
 	error_file.write(write_string)
 	error_file.close()
 
+def write_state(in_string):
+	error_file = open('selected_state', 'w')		# File: selected state
+	error_file.write(in_string)
+	error_file.close()
 
+def read_state():
+	error_file = open('selected_state', 'r')		# File: selected state
+	in_string = ""
+	in_string = error_file.read()
+	error_file.close()
+	return in_string
+	
 def send_bash_command(bashCommand):
-	print bashCommand
+	# print bashCommand
+	write_debug(bashCommand)
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE) #, stderr=subprocess.PIPE)
-	print process
+	# print process
 	output = process.communicate()[0]
-	print output
+	# print output
 	return output
+
+def send_bash_command_in_background(bashCommand):
+	# Fire off a bash command and forget about it.
+	write_debug(bashCommand)
+	process = subprocess.Popen(bashCommand.split())
 
 ########################################################################
 class MainPanel(wx.Panel):
@@ -45,7 +60,7 @@ class MainPanel(wx.Panel):
 	def __init__(self, parent):
 		"""Constructor"""
 		wx.Panel.__init__(self, parent=parent)
-		# self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+		self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 		self.frame = parent
  
 		sizer = wx.BoxSizer(wx.VERTICAL)
@@ -77,16 +92,11 @@ class MainPanel(wx.Panel):
 
 		# End Standard Buttons		
 		#-------------------------------------------------------------------
-		
-		#-------------------------------------------------------------------
 		# Drop Boxes
 
 		controls = ['GoPiGo', 'GrovePi', 'BrickPi']	# Options for drop down.
-		
-		######################
-		## Left Side Controls
-		
-		# Controller: L1 L2
+
+		# Select Platform.
 		
 		robotDrop = wx.ComboBox(self, -1, "GoPiGo", pos=(25, 25), size=(150, -1), choices=controls, style=wx.CB_READONLY)  # Drop down setup
 		robotDrop.Bind(wx.EVT_COMBOBOX, self.robotDrop)					# Binds drop down.		
@@ -115,48 +125,114 @@ class MainPanel(wx.Panel):
 			rect = self.GetUpdateRegion().GetBox()
 			dc.SetClippingRect(rect)
 		dc.Clear()	
-		bmp = wx.Bitmap("dex.jpg")	# Draw the photograph.
-		dc.DrawBitmap(bmp, -75, -75, false)						# Absolute position of where to put the picture
-	
+		bmp = wx.Bitmap("dex.png")	# Draw the photograph.
+		dc.DrawBitmap(bmp, 0, 400)						# Absolute position of where to put the picture
+		
+		# Add a second picture.
+		robot = read_state()+".png"
+		bmp = wx.Bitmap(robot)	# Draw the photograph.
+		dc.DrawBitmap(bmp, 200, 0)	
+
+		
+		
 	def robotDrop(self, event):
 		write_debug("robotDrop Selected.")
+		controls = ['GoPiGo', 'GrovePi', 'BrickPi']	# Options for drop down.
 		value = event.GetSelection()
-		#print item
-		position = 0					# Position in the key list on file
-		write_to_file(position, value) 	# print value to file.  
+		print controls[value]
+		# position = 0					# Position in the key list on file
+		write_state(controls[value]) 	# print value to file.  
+		
+		# Update Picture
+		robot = read_state()+".png"
+		png = wx.Image(robot, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+		wx.StaticBitmap(self, -1, png, (200, 0), (png.GetWidth(), png.GetHeight()))
 
 	def start_programming(self, event):
+		# Kill all Python Programs.  Any running *Scratch* Python Programs.
 		write_debug("Start robot.")	
+		dlg = wx.MessageDialog(self, 'This will close any open Scratch programs.  Please save and click Ok!', 'Alert!', wx.OK|wx.ICON_INFORMATION)
+		dlg.ShowModal()
+		dlg.Destroy()
+		p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+		out, err = p.communicate()
+		print out
+		for line in out.splitlines():
+			if 'squeakvm' in line:
+				pid = int(line.split(None, 1)[0])
+				os.kill(pid, signal.SIGKILL)
+			if 'BrickPiScratch_' in line:
+				pid = int(line.split(None, 1)[0])
+				os.kill(pid, signal.SIGKILL)
+			if 'GoPiGoScratch_d' in line:
+				pid = int(line.split(None, 1)[0])
+				os.kill(pid, signal.SIGKILL)
+			if 'GrovePiScratch_d' in line:
+				pid = int(line.split(None, 1)[0])
+				os.kill(pid, signal.SIGKILL)
+
+		folder = read_state()
+		if folder == 'BrickPi':
+			program = "/home/pi/Desktop/BrickPi_Scratch/BrickPiScratch.py"
+		if folder == 'GoPiGo':
+			program = "/home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGoScratch.py"
+		if folder == 'GrovePi':
+			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
+		start_command = "sudo python "+program
+		send_bash_command_in_background(start_command)
+		
+		write_debug("Programming Started.")	
+		
+		# Start Scratch
+		start_command = "scratch"
+		send_bash_command_in_background(start_command)
+		'''
 		dlg = wx.MessageDialog(self, 'Starting Scratch Programming!', 'Update', wx.OK|wx.ICON_INFORMATION)
 		dlg.ShowModal()
 		dlg.Destroy()
-	
-	
-	def examples(self, event):
-		write_debug("Examples pressed.")
-		# send_bash_command("ping -c 1 google.com")
-		# Check for Directory on Desktop
-		print(os.path.isdir("/home/pi/Desktop/Dexter_Ed"))
-		if(os.path.isdir("/home/pi/Desktop/Dexter_Ed")):
-			send_bash_command("(cd /home/pi/Desktop/DexterEd && git fetch origin)")
-			send_bash_command("(cd /home/pi/Desktop/DexterEd && git reset --hard)")
-			send_bash_command("(cd /home/pi/Desktop/DexterEd && git merge origin/master)")
-			
-		else:
-			# send_bash_command("(cd /home/pi/Desktop && git clone https://github.com/DexterInd/DexterEd)")
-			send_bash_command("cd /home/pi/Desktop")
-			send_bash_command("git clone https://github.com/DexterInd/DexterEd")
-		dlg = wx.MessageDialog(self, 'Open up examples folder.', 'Update', wx.OK|wx.ICON_INFORMATION)
-		dlg.ShowModal()
-		dlg.Destroy()
+		'''
 
-		
+	
 	def curriculum_update(self, event):
-		write_debug("Curriculum Pressed.")	
-		dlg = wx.MessageDialog(self, 'Update Curriculum . . . ', 'Update', wx.OK|wx.ICON_INFORMATION)
-		dlg = wx.MessageDialog(self, str(i), str(i))
-		dlg.ShowModal()
+		write_debug("Update pressed.")
+		# app = wx.PySimpleApp()
+		progressMax = 100
+		dlg = wx.ProgressDialog("Update DexterEd", "Remaining", progressMax,style=wx.PD_ELAPSED_TIME | wx.PD_REMAINING_TIME)
+		print(os.path.isdir("/home/pi/Desktop/DexterEd/"))
+		dlg.Update(25)
+		if(os.path.isdir("/home/pi/Desktop/DexterEd")):
+			dlg.Update(35)
+			os.chdir("/home/pi/Desktop/DexterEd")
+			send_bash_command("git fetch origin")
+			dlg.Update(55)
+			send_bash_command("git reset --hard")
+			dlg.Update(65)
+			send_bash_command("git merge origin/master")
+			dlg.Update(75)
+		else:
+			os.chdir("/home/pi/Desktop/") 											# Change directory.
+			dlg.Update(25)
+			send_bash_command("git clone https://github.com/DexterInd/DexterEd")	# Clone the repo.
+			dlg.Update(35)
+		print "End of Dialog Box!"
+		
+		# Check Permissions of Scratch, Update them.
+		print "Install Scratch Shortcuts and Permissions."
+		send_bash_command("sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop")  					# Delete old icons off desktop
+		send_bash_command("sudo cp /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGo_Scratch_Start.desktop /home/pi/Desktop")	# Move icons to desktop
+		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGoScratch_debug.sh")					# Change script permissions
+		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGo_Scratch_Start.sh")					# Change script permissions
+		
+		
 		dlg.Destroy()
+		
+	def examples(self, event):
+		write_debug("Examples Pressed.")	
+		folder = read_state()
+		directory = "nohup pcmanfm /home/pi/Desktop/"+folder+"/"
+		send_bash_command_in_background(directory)
+		print "Opened up file manager!"
+		write_debug("Opened up file manager!")
 
 	def About(self, event):
 		write_debug("About Pressed.")	
@@ -166,7 +242,8 @@ class MainPanel(wx.Panel):
 		
 	def onClose(self, event):	# Close the entire program.
 		write_debug("Close Pressed.")
-		""""""
+		"""
+		"""
 		self.frame.Close()
   
 ########################################################################
@@ -179,8 +256,9 @@ class MainFrame(wx.Frame):
 		# wx.ComboBox
 
 		wx.Icon('favicon.ico', wx.BITMAP_TYPE_ICO)
-		wx.Frame.__init__(self, None, size=(400,600))		# Set the fram size
-		
+		wx.Log.SetVerbose(False)
+		wx.Frame.__init__(self, None, title="Scratch for Robots", size=(400,600))		# Set the fram size
+
 		panel = MainPanel(self)        
 		self.Center()
  
@@ -198,6 +276,7 @@ class Main(wx.App):
 #----------------------------------------------------------------------
 if __name__ == "__main__":
 	write_debug(" # Program # started # !")
+	write_state("GoPiGo")
 	# reset_file()	#Reset the file every time we turn this program on.
 	app = Main()
 	app.MainLoop()
