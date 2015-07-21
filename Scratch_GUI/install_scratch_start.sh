@@ -10,7 +10,8 @@ cp Scratch_Start.desktop /home/pi/Desktop
 sudo chmod +x /home/pi/Desktop/Scratch_Start.desktop
 # Make run_scratch_gui executable.
 sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/Scratch_Start.sh
-
+# Make scratch start example read only.
+sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb	# user, group, etc are just read only
 # Remove Scratch Shortcuts if they're there.
 sudo rm /home/pi/Desktop/BrickPi_Scratch_Start.desktop
 sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop
