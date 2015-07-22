@@ -161,22 +161,32 @@ class MainPanel(wx.Panel):
 		dlg = wx.MessageDialog(self, 'This will close any open Scratch programs.  Please save your work and click Ok!', 'Alert!', wx.OK|wx.ICON_INFORMATION)
 		dlg.ShowModal()
 		dlg.Destroy()
-		p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+		p = subprocess.Popen(['ps', '-aux'], stdout=subprocess.PIPE)
 		out, err = p.communicate()
 		# print out
 		for line in out.splitlines():
 			if 'squeakvm' in line:
-				pid = int(line.split(None, 1)[0])
-				os.kill(pid, signal.SIGKILL)
-			if 'BrickPiScratch_' in line:
-				pid = int(line.split(None, 1)[0])
-				os.kill(pid, signal.SIGKILL)
-			if 'GoPiGoScratch_d' in line:
-				pid = int(line.split(None, 1)[0])
-				os.kill(pid, signal.SIGKILL)
-			if 'GrovePiScratch_d' in line:
-				pid = int(line.split(None, 1)[0])
-				os.kill(pid, signal.SIGKILL)
+				print line
+				pid = int(line.split(None, 2)[1])
+				kill_line = "sudo kill " + str(pid)
+				send_bash_command(kill_line)			
+			if 'GoPiGoScratch' in line:
+				print line
+				pid = int(line.split(None, 2)[1])
+				kill_line = "sudo kill " + str(pid)
+				send_bash_command(kill_line)
+				
+			if 'GrovePiScratch' in line:
+				print line
+				pid = int(line.split(None, 2)[1])
+				kill_line = "sudo kill " + str(pid)
+				send_bash_command(kill_line)
+				
+			if 'Scratch' in line:
+				print line
+				pid = int(line.split(None, 2)[1])
+				kill_line = "sudo kill " + str(pid)
+				send_bash_command(kill_line)	
 
 		folder = read_state()
 		if folder == 'BrickPi':
