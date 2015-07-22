@@ -125,11 +125,11 @@ class MainPanel(wx.Panel):
 			rect = self.GetUpdateRegion().GetBox()
 			dc.SetClippingRect(rect)
 		dc.Clear()	
-		bmp = wx.Bitmap("dex.png")	# Draw the photograph.
+		bmp = wx.Bitmap("/home/pi/Desktop/DexterEd/Scratch_GUI/dex.png")	# Draw the photograph.
 		dc.DrawBitmap(bmp, 0, 400)						# Absolute position of where to put the picture
 		
 		# Add a second picture.
-		robot = read_state()+".png"
+		robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
 		bmp = wx.Bitmap(robot)	# Draw the photograph.
 		dc.DrawBitmap(bmp, 200, 0)	
 
@@ -144,7 +144,7 @@ class MainPanel(wx.Panel):
 		write_state(controls[value]) 	# print value to file.  
 		
 		# Update Picture
-		robot = read_state()+".png"
+		robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
 		png = wx.Image(robot, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
 		wx.StaticBitmap(self, -1, png, (200, 0), (png.GetWidth(), png.GetHeight()))
 
