@@ -1,5 +1,6 @@
 import wx
 import os
+import sys
 import pickle
 from datetime import datetime
 import subprocess
@@ -8,10 +9,14 @@ import threading
 import psutil
 import signal
 
-# Commenting
-# Test
-# Space out commands.
-# Executable
+#	This program runs when a Scratch program is clicked on the desktop.
+#	It should be called by a modified script in /usr/bin/scratch to start.
+#	It will:
+# 		- First allow a user to specify which platform they want to run (GrovePi, GoPiGo, or BrickPi)
+#		- Second kill all Scratch programs.
+#		- Third start the appropriate background program (GrovePi, GoPiGo, BrickPi)
+# 		- Kill itself.
+#	After the program is run, /usr/bin/scratch will start Scratch, opening the file.
 
 # References
 # http://www.blog.pythonlibrary.org/2010/03/18/wxpython-putting-a-background-image-on-a-panel/
@@ -71,9 +76,10 @@ class MainPanel(wx.Panel):
 		# Standard Buttons
 
 		# Start Programming
-		start_programming = wx.Button(self, label="Start Programming", pos=(25,75))
+		start_programming = wx.Button(self, label="Start Programming!", pos=(25,75))
 		start_programming.Bind(wx.EVT_BUTTON, self.start_programming)
 		
+		'''
 		# Open Examples
 		examples_button = wx.Button(self, label="Open Examples", pos=(25, 125))
 		examples_button.Bind(wx.EVT_BUTTON, self.examples)			
@@ -89,6 +95,7 @@ class MainPanel(wx.Panel):
 		# Exit
 		exit_button = wx.Button(self, label="Exit", pos=(25,275))
 		exit_button.Bind(wx.EVT_BUTTON, self.onClose)
+		'''
 
 		# End Standard Buttons		
 		#-------------------------------------------------------------------
@@ -151,12 +158,12 @@ class MainPanel(wx.Panel):
 	def start_programming(self, event):
 		# Kill all Python Programs.  Any running *Scratch* Python Programs.
 		write_debug("Start robot.")	
-		dlg = wx.MessageDialog(self, 'This will close any open Scratch programs.  Please save and click Ok!', 'Alert!', wx.OK|wx.ICON_INFORMATION)
+		dlg = wx.MessageDialog(self, 'This will close any open Scratch programs.  Please save your work and click Ok!', 'Alert!', wx.OK|wx.ICON_INFORMATION)
 		dlg.ShowModal()
 		dlg.Destroy()
 		p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
 		out, err = p.communicate()
-		print out
+		# print out
 		for line in out.splitlines():
 			if 'squeakvm' in line:
 				pid = int(line.split(None, 1)[0])
@@ -183,62 +190,17 @@ class MainPanel(wx.Panel):
 		
 		write_debug("Programming Started.")	
 		
+		self.frame.Close()
+		sys.exit()				# Exit!
 		# Start Scratch
-		start_command = "/home/pi/Desktop/DexterEd/Scratch_GUI/scratch_direct /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb"
+		''' 
+		start_command = "scratch /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb"
 		send_bash_command_in_background(start_command)
-		'''
 		dlg = wx.MessageDialog(self, 'Starting Scratch Programming!', 'Update', wx.OK|wx.ICON_INFORMATION)
 		dlg.ShowModal()
 		dlg.Destroy()
 		'''
-
-	
-	def curriculum_update(self, event):
-		write_debug("Update pressed.")
-		# app = wx.PySimpleApp()
-		progressMax = 100
-		dlg = wx.ProgressDialog("Update DexterEd", "Remaining", progressMax,style=wx.PD_ELAPSED_TIME | wx.PD_REMAINING_TIME)
-		print(os.path.isdir("/home/pi/Desktop/DexterEd/"))
-		dlg.Update(25)
-		if(os.path.isdir("/home/pi/Desktop/DexterEd")):
-			dlg.Update(35)
-			os.chdir("/home/pi/Desktop/DexterEd")
-			send_bash_command("git fetch origin")
-			dlg.Update(55)
-			send_bash_command("git reset --hard")
-			dlg.Update(65)
-			send_bash_command("git merge origin/master")
-			dlg.Update(75)
-		else:
-			os.chdir("/home/pi/Desktop/") 											# Change directory.
-			dlg.Update(25)
-			send_bash_command("git clone https://github.com/DexterInd/DexterEd")	# Clone the repo.
-			dlg.Update(35)
-		print "End of Dialog Box!"
 		
-		# Check Permissions of Scratch, Update them.
-		print "Install Scratch Shortcuts and Permissions."
-		send_bash_command("sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop")  					# Delete old icons off desktop
-		send_bash_command("sudo cp /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGo_Scratch_Start.desktop /home/pi/Desktop")	# Move icons to desktop
-		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGoScratch_debug.sh")					# Change script permissions
-		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGo_Scratch_Start.sh")					# Change script permissions
-		
-		
-		dlg.Destroy()
-		
-	def examples(self, event):
-		write_debug("Examples Pressed.")	
-		folder = read_state()
-		directory = "nohup pcmanfm /home/pi/Desktop/"+folder+"/"
-		send_bash_command_in_background(directory)
-		print "Opened up file manager!"
-		write_debug("Opened up file manager!")
-
-	def About(self, event):
-		write_debug("About Pressed.")	
-		dlg = wx.MessageDialog(self, 'Learn more about Dexter Industries and DexterEd at dexterindustries.com', 'About', wx.OK|wx.ICON_INFORMATION)
-		dlg.ShowModal()
-		dlg.Destroy()
 		
 	def onClose(self, event):	# Close the entire program.
 		write_debug("Close Pressed.")
@@ -257,7 +219,7 @@ class MainFrame(wx.Frame):
 
 		wx.Icon('/home/pi/Desktop/DexterEd/Scratch_GUI/favicon.ico', wx.BITMAP_TYPE_ICO)
 		wx.Log.SetVerbose(False)
-		wx.Frame.__init__(self, None, title="Scratch for Robots", size=(400,600))		# Set the fram size
+		wx.Frame.__init__(self, None, title="Scratch for Robots", size=(400,300))		# Set the frame size
 
 		panel = MainPanel(self)        
 		self.Center()

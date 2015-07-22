@@ -1,8 +1,8 @@
 #! /bin/bash
 # Install the Scratch GUI.
 
-sudo apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n -y
-sudo apt-get install python-psutil -y
+sudo apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n --force-yes
+sudo apt-get install python-psutil --force-yes
 
 # Copy shortcut to desktop.
 cp Scratch_Start.desktop /home/pi/Desktop
@@ -22,7 +22,12 @@ sudo rm /home/pi/Desktop/Scratch.desktop
 # Scratch GUI is launched, and all other programs are killed.
 
 #delete scratch from /usr/bin
-
+sudo rm /usr/bin/scratch
 # make a new scratch in /usr/bin
+sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/scratch /usr/bin
+# Change scratch permissions
+sudo chmod +x /usr/bin/scratch
 
 # set permissions
+sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch_launch
+sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch_direct
