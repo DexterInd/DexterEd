@@ -255,7 +255,7 @@ class MainFrame(wx.Frame):
 		"""Constructor"""
 		# wx.ComboBox
 
-		wx.Icon('favicon.ico', wx.BITMAP_TYPE_ICO)
+		wx.Icon('/home/pi/Desktop/DexterEd/Scratch_GUI/favicon.ico', wx.BITMAP_TYPE_ICO)
 		wx.Log.SetVerbose(False)
 		wx.Frame.__init__(self, None, title="Scratch for Robots", size=(400,600))		# Set the fram size
 
