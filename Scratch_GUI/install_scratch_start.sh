@@ -5,7 +5,7 @@ sudo apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n --force-yes
 sudo apt-get install python-psutil --force-yes
 
 # Copy shortcut to desktop.
-cp Scratch_Start.desktop /home/pi/Desktop
+cp /home/pi/Desktop/DexterEd/Scratch_GUI/Scratch_Start.desktop /home/pi/Desktop
 # Make shortcut executable
 sudo chmod +x /home/pi/Desktop/Scratch_Start.desktop
 # Make run_scratch_gui executable.
@@ -15,7 +15,7 @@ sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb	# user, group, etc
 # Remove Scratch Shortcuts if they're there.
 sudo rm /home/pi/Desktop/BrickPi_Scratch_Start.desktop
 sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop
-sudo rm /home/pi/Desktop/Scratch.desktop
+sudo rm /home/pi/Desktop/scratch.desktop
 
 # Make sure that Scratch always starts Scratch GUI
 # We'll install these parts to make sure that if a user double-clicks on a file on the desktop

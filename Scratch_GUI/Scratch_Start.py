@@ -175,7 +175,7 @@ class MainPanel(wx.Panel):
 				kill_line = "sudo kill " + str(pid)
 				send_bash_command(kill_line)
 				
-			if 'Scratch' in line:
+			if 'BrickPiScratch' in line:
 				print line
 				pid = int(line.split(None, 2)[1])
 				kill_line = "sudo kill " + str(pid)
@@ -194,7 +194,7 @@ class MainPanel(wx.Panel):
 		write_debug("Programming Started.")	
 		
 		# Start Scratch
-		start_command = "/home/pi/Desktop/DexterEd/Scratch_GUI/scratch_direct /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb"
+		start_command = "sudo  sh /home/pi/Desktop/DexterEd/Scratch_GUI/scratch_direct /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb"
 		send_bash_command_in_background(start_command)
 		'''
 		dlg = wx.MessageDialog(self, 'Starting Scratch Programming!', 'Update', wx.OK|wx.ICON_INFORMATION)

@@ -91,11 +91,11 @@ class MainPanel(wx.Panel):
 		# About
 		about_button = wx.Button(self, label="About", pos=(25, 225))
 		about_button.Bind(wx.EVT_BUTTON, self.About)		
-		
-		# Exit
-		exit_button = wx.Button(self, label="Exit", pos=(25,275))
-		exit_button.Bind(wx.EVT_BUTTON, self.onClose)
 		'''
+		# Exit
+		exit_button = wx.Button(self, label="Exit", pos=(25,125))
+		exit_button.Bind(wx.EVT_BUTTON, self.onClose)
+	
 
 		# End Standard Buttons		
 		#-------------------------------------------------------------------
@@ -182,7 +182,7 @@ class MainPanel(wx.Panel):
 				kill_line = "sudo kill " + str(pid)
 				send_bash_command(kill_line)
 				
-			if 'Scratch' in line:
+			if 'BrickPiScratch' in line:
 				print line
 				pid = int(line.split(None, 2)[1])
 				kill_line = "sudo kill " + str(pid)
