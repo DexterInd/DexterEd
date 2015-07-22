@@ -1,0 +1,10 @@
+#! /bin/bash
+
+#echo "$1" >> /home/pi/scratch_output
+# sudo echo "Hey!" >> /home/pi/scratch_output
+# sudo sleep 5
+SCRATCH_PROGRAM_ADDRESS = "/home/pi/Desktop/DexterEd/scratch $1"
+#echo "$SCRATCH_PROGRAM_ADDRESS" >> /home/pi/scratch_output
+
+sudo python /home/pi/Desktop/DexterEd/Scratch_GUI/click_scratch.py
+sudo /home/pi/Desktop/DexterEd/Scratch_GUI/scratch $1

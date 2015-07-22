@@ -16,3 +16,13 @@ sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb	# user, group, etc
 sudo rm /home/pi/Desktop/BrickPi_Scratch_Start.desktop
 sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop
 sudo rm /home/pi/Desktop/Scratch.desktop
+
+# Make sure that Scratch always starts Scratch GUI
+# We'll install these parts to make sure that if a user double-clicks on a file on the desktop
+# Scratch GUI is launched, and all other programs are killed.
+
+#delete scratch from /usr/bin
+
+# make a new scratch in /usr/bin
+
+# set permissions
