@@ -1,0 +1,31 @@
+2015-07-22 20:57:48.200000 -  # Program # started # !
+2015-07-22 20:57:55.949000 - robotDrop Selected.
+2015-07-22 20:59:12.053000 -  # Program # started # !
+2015-07-22 20:59:37.559000 -  # Program # started # !
+2015-07-22 20:59:43.627000 -  # Program # started # !
+2015-07-22 21:00:10.312000 - Close Pressed.
+2015-07-22 21:00:12.532000 -  # Program # started # !
+2015-07-22 21:00:19.141000 - robotDrop Selected.
+2015-07-22 21:00:23.730000 - robotDrop Selected.
+2015-07-22 21:00:29.027000 - Close Pressed.
+2015-07-22 21:01:16.965000 -  # Program # started # !
+2015-07-22 21:01:20.008000 - robotDrop Selected.
+2015-07-22 21:01:24.204000 - robotDrop Selected.
+2015-07-22 21:01:26.822000 - robotDrop Selected.
+2015-07-22 21:01:32.320000 - robotDrop Selected.
+2015-07-22 21:01:35.951000 - robotDrop Selected.
+2015-07-22 21:01:39.509000 - robotDrop Selected.
+2015-07-22 21:01:42.114000 - robotDrop Selected.
+2015-07-22 21:01:48.203000 - robotDrop Selected.
+2015-07-22 21:06:08.648000 -  # Program # started # !
+2015-07-22 21:07:27.099000 -  # Program # started # !
+2015-07-22 21:07:31.145000 - Close Pressed.
+2015-07-22 21:07:33.259000 -  # Program # started # !
+2015-07-22 21:07:38.927000 - Start robot.
+2015-07-22 21:07:41.571000 - sudo python /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGoScratch.py
+2015-07-22 21:07:44.940000 - Update pressed.
+2015-07-22 21:07:57.679000 -  # Program # started # !
+2015-07-22 21:08:00.176000 - Examples Pressed.
+2015-07-22 21:08:00.183000 - nohup pcmanfm /home/pi/Desktop/GoPiGo/
+2015-07-22 21:08:10.543000 - About Pressed.
+2015-07-22 21:08:13.553000 - Close Pressed.

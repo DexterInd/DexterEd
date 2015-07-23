@@ -3,6 +3,7 @@
 
 sudo apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n --force-yes
 sudo apt-get install python-psutil --force-yes
+sudo apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n --force-yes
 
 # Copy shortcut to desktop.
 cp /home/pi/Desktop/DexterEd/Scratch_GUI/Scratch_Start.desktop /home/pi/Desktop
@@ -29,5 +30,5 @@ sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/scratch /usr/bin
 sudo chmod +x /usr/bin/scratch
 
 # set permissions
-sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch_launch
+# sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch_launch
 sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch_direct
