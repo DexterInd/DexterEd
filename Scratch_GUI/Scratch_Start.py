@@ -228,11 +228,17 @@ class MainPanel(wx.Panel):
 		
 		# Check Permissions of Scratch, Update them.
 		print "Install Scratch Shortcuts and Permissions."
-		send_bash_command("sudo rm /home/pi/Desktop/GoPiGo_Scratch_Start.desktop")  					# Delete old icons off desktop
-		send_bash_command("sudo cp /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGo_Scratch_Start.desktop /home/pi/Desktop")	# Move icons to desktop
+		send_bash_command("sudo rm /home/pi/Desktop/Scratch_Start.desktop")  					# Delete old icons off desktop
+		send_bash_command("sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/Scratch_Start.desktop /home/pi/Desktop")	# Move icons to desktop
+		send_bash_command("sudo chmod +x /home/pi/Desktop/Scratch_Start.desktop")
 		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGoScratch_debug.sh")					# Change script permissions
 		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/GoPiGo_Scratch_Start.sh")					# Change script permissions
-		
+		send_bash_command("sudo chmod +x /home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGo_Scratch_Scripts/selected_state")					# Change script permissions
+		send_bash_command("sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/click_scratch.py")
+		send_bash_command("sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch")
+		send_bash_command("sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb")
+		send_bash_command("sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/Scratch_Start.sh")
+
 		
 		dlg.Destroy()
 		
