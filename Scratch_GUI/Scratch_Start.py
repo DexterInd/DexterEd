@@ -1,3 +1,4 @@
+import time
 import wx
 import os
 import pickle
@@ -224,6 +225,8 @@ class MainPanel(wx.Panel):
 			program = "/home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGoScratch.py"
 		if folder == 'GrovePi':
 			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
+		else:
+			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		start_command = "sudo python "+program
 		send_bash_command_in_background(start_command)
 		
@@ -274,6 +277,7 @@ class MainPanel(wx.Panel):
 			send_bash_command("sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/click_scratch.py")
 			send_bash_command("sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/scratch")
 			send_bash_command("sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb")
+			send_bash_command("sudo chmod ugo+r /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb.bkp")
 			send_bash_command("sudo chmod +x /home/pi/Desktop/DexterEd/Scratch_GUI/Scratch_Start.sh")
 	                send_bash_command("sudo chmod 777 /home/pi/Desktop/DexterEd/Scratch_GUI/selected_state")
         	        time.sleep(1)
