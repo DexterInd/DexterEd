@@ -101,5 +101,9 @@ VMOPTIONS="$VMOPTIONS -vm-sound-alsa"
 
 # VM, Image, and Document are non-optional
 # Document has to be present even if empty for IMOPTIONS to work
+
+sudo rm /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
+sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb.bkp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
+
 echo Executing: $WRAPPER "$VM" $VMOPTIONS "$IMAGE" "$DOCUMENT" $IMOPTIONS
 exec $WRAPPER "$VM" $VMOPTIONS "$IMAGE" "$DOCUMENT" $IMOPTIONS
