@@ -109,7 +109,7 @@ class MainPanel(wx.Panel):
 		#-------------------------------------------------------------------
 		# Drop Boxes
 
-		controls = ['GoPiGo', 'GrovePi', 'BrickPi']	# Options for drop down.
+		controls = ['GoPiGo', 'GrovePi', 'BrickPi', 'Just Scratch, no Robot.']	# Options for drop down.
 
 		# Select Platform.
 		
@@ -148,28 +148,41 @@ class MainPanel(wx.Panel):
 		dc.DrawBitmap(bmp, 0, 0)						# Absolute position of where to put the picture
 		
 		# Add a second picture.
-		robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
-		bmp = wx.Bitmap(robot)	# Draw the photograph.
-		dc.DrawBitmap(bmp, 200, 200)	
+		if read_state() == 'Just Scratch, no Robot.':
+			print "Selected Just Scratch no Robot."
+		else:
+			robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
+			bmp = wx.Bitmap(robot)	# Draw the photograph.
+			dc.DrawBitmap(bmp, 200, 200)	
+
 
 		
 		
 	def robotDrop(self, event):
 		write_debug("robotDrop Selected.")
-		controls = ['GoPiGo', 'GrovePi', 'BrickPi']	# Options for drop down.
+		controls = ['GoPiGo', 'GrovePi', 'BrickPi', 'Just Scratch, no Robot.']	# Options for drop down.
 		value = event.GetSelection()
 		print controls[value]
-		# position = 0					# Position in the key list on file
-		write_state(controls[value]) 	# print value to file.  
+		# position = 0				# Position in the key list on file
 		
-		# Update Picture
-		try:
-			print "Read State: " + str(read_state())
-			robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
-			png = wx.Image(robot, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-			wx.StaticBitmap(self, -1, png, (200, 200), (png.GetWidth(), png.GetHeight()))
-		except:
-			print "Failed robotDrop."
+		write_state(controls[value])    # print value to file.  
+		if(controls[value]=='Just Scratch, no Robot.'):
+			print "Just Scratch!"
+			# robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
+			# png = wx.Image(robot, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+			# wx.StaticBitmap(self, -1, png, (200, 200), (png.GetWidth(), png.GetHeight()))
+
+		else:
+			write_state(controls[value]) 	# print value to file.  
+		
+			# Update Picture
+			try:
+				print "Read State: " + str(read_state())
+				robot = "/home/pi/Desktop/DexterEd/Scratch_GUI/"+read_state()+".png"
+				png = wx.Image(robot, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+				wx.StaticBitmap(self, -1, png, (200, 200), (png.GetWidth(), png.GetHeight()))
+			except:
+				print "Failed robotDrop."
 
 	def start_programming(self, event):
 		# Kill all Python Programs.  Any running *Scratch* Python Programs.
