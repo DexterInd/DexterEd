@@ -101,13 +101,15 @@ VMOPTIONS="$VMOPTIONS -vm-sound-alsa"
 
 echo "$DOCUMENT"
 
+sudo rm /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
+sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb.bkp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
+
 if [ -n "$DOCUMENT" ]; then
 	echo "Document found and called."
 	echo "$DOCUMENT"
 	sudo python /home/pi/Desktop/DexterEd/Scratch_GUI/click_scratch.py
 else
-	sudo rm /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
-	sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb.bkp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
+
 	DOCUMENT="/home/pi/Desktop/DexterEd/Scratch_GUI/new.sb"
 	sudo python /home/pi/Desktop/DexterEd/Scratch_GUI/click_scratch.py
 fi
