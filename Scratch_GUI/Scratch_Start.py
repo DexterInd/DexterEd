@@ -219,12 +219,10 @@ class MainPanel(wx.Panel):
 				send_bash_command(kill_line)	
 
 		folder = read_state()
-		if folder == 'BrickPi':
+		if folder.find('BrickPi') >= 0:
 			program = "/home/pi/Desktop/BrickPi_Scratch/BrickPiScratch.py"
-		if folder == 'GoPiGo':
+		if folder.find('GoPiGo') >= 0:
 			program = "/home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGoScratch.py"
-		if folder == 'GrovePi':
-			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		else:
 			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		start_command = "sudo python "+program
