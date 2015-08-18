@@ -101,6 +101,7 @@ VMOPTIONS="$VMOPTIONS -vm-sound-alsa"
 
 echo "$DOCUMENT"
 
+xhost +
 sudo rm /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
 sudo cp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb.bkp /home/pi/Desktop/DexterEd/Scratch_GUI/new.sb
 

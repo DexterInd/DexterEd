@@ -219,10 +219,12 @@ class MainPanel(wx.Panel):
 				send_bash_command(kill_line)	
 
 		folder = read_state()
-		if folder.find('BrickPi') >= 0:
+		if folder == 'BrickPi':
 			program = "/home/pi/Desktop/BrickPi_Scratch/BrickPiScratch.py"
-		if folder.find('GoPiGo') >= 0:
+		if folder == 'GoPiGo':
 			program = "/home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGoScratch.py"
+		if folder == 'GrovePi':
+			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		else:
 			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		start_command = "sudo python "+program
@@ -345,6 +347,7 @@ class Main(wx.App):
  
 #----------------------------------------------------------------------
 if __name__ == "__main__":
+	send_bash_command_in_background("xhost +")
 	write_debug(" # Program # started # !")
 	write_state("GoPiGo")
 	# reset_file()	#Reset the file every time we turn this program on.
