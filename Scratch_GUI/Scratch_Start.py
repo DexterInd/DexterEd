@@ -10,11 +10,6 @@ import psutil
 import signal
 import urllib2
 
-# Commenting
-# Test
-# Space out commands.
-# Executable
-
 # References
 # http://www.blog.pythonlibrary.org/2010/03/18/wxpython-putting-a-background-image-on-a-panel/
 # ComboBoxes!  		http://wiki.wxpython.org/AnotherTutorial#wx.ComboBox
@@ -219,12 +214,10 @@ class MainPanel(wx.Panel):
 				send_bash_command(kill_line)	
 
 		folder = read_state()
-		if folder == 'BrickPi':
+		if folder.find('BrickPi') >= 0:
 			program = "/home/pi/Desktop/BrickPi_Scratch/BrickPiScratch.py"
-		if folder == 'GoPiGo':
+		elif folder.find('GoPiGo') >= 0:
 			program = "/home/pi/Desktop/GoPiGo/Software/Scratch/GoPiGoScratch.py"
-		if folder == 'GrovePi':
-			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		else:
 			program = "/home/pi/Desktop/GrovePi/Software/Scratch/GrovePiScratch.py"
 		start_command = "sudo python "+program
@@ -347,7 +340,6 @@ class Main(wx.App):
  
 #----------------------------------------------------------------------
 if __name__ == "__main__":
-	send_bash_command_in_background("xhost +")
 	write_debug(" # Program # started # !")
 	write_state("GoPiGo")
 	# reset_file()	#Reset the file every time we turn this program on.
