@@ -95,7 +95,11 @@ class MainPanel(wx.Panel):
 
 		# About
 		about_button = wx.Button(self, label="About", pos=(25, 425))
-		about_button.Bind(wx.EVT_BUTTON, self.About)		
+		about_button.Bind(wx.EVT_BUTTON, self.About)
+		
+		# Test Hardware
+		test_button = wx.Button(self, label="Test", pos=(50, 425))
+		test_button.Bind(wx.EVT_BUTTON, self.test)
 		
 		# Exit
 		exit_button = wx.Button(self, label="Exit", pos=(25,475))
@@ -113,8 +117,7 @@ class MainPanel(wx.Panel):
 		robotDrop.Bind(wx.EVT_COMBOBOX, self.robotDrop)					# Binds drop down.		
 		
 		wx.StaticText(self, -1, "Select a Robot:", (25, 205))					# (Minus 50, minus 0)
-				
-
+		
 		wx.StaticText(self, -1, "Caution: Do not close the terminal window!", (25, 510))
 
 		# Drop Boxes
@@ -151,9 +154,6 @@ class MainPanel(wx.Panel):
 			bmp = wx.Bitmap(robot)	# Draw the photograph.
 			dc.DrawBitmap(bmp, 200, 200)	
 
-
-		
-		
 	def robotDrop(self, event):
 		write_debug("robotDrop Selected.")
 		controls = ['GoPiGo', 'GrovePi', 'BrickPi', 'Just Scratch, no Robot.']	# Options for drop down.
@@ -234,7 +234,6 @@ class MainPanel(wx.Panel):
 		dlg.Destroy()
 		'''
 
-	
 	def curriculum_update(self, event):
 		write_debug("Update pressed.")
 		# app = wx.PySimpleApp()
@@ -283,7 +282,6 @@ class MainPanel(wx.Panel):
 			write_debug("Internet out.  Not connected.")
 			dlg.Destroy()
 
-		
 	def examples(self, event):
 		write_debug("Examples Pressed.")	
 		folder = read_state()
@@ -298,6 +296,35 @@ class MainPanel(wx.Panel):
 		print "Opened up file manager!"
 		write_debug("Opened up file manager!")
 
+	def test(self, event):
+		# Test the hardware.  Test the selected hardware.  
+		write_debug("Test robot.")
+		folder = read_state()
+		if folder.find('BrickPi') >= 0:
+			# Run BrickPi Test.
+			dlg = wx.MessageDialog(self, 'Ok, start BrickPi Test. Make sure the BrickPi is powerd by batteries, a motor is connected, and a touch sensor is connected to Port 1.  You shold see the LEDs blink and the motors move when the touch sensor is pressed.  Then press Ok. ', 'Test BrickPi!', wx.OK|wx.ICON_INFORMATION)
+			dlg.ShowModal()
+			dlg.Destroy()
+			program = "sudo python /home/pi/Desktop/BrickPi_Python/Brick_Hardware_Test.py"
+			send_bash_command_in_background(program)
+
+		elif folder.find('GoPiGo') >= 0:
+			# Run GoPiGo Test.
+			dlg = wx.MessageDialog(self, 'Ok, start GoPiGo Test. Make sure the GoPiGo is powerd by batteries and is turned upside down.  You shold see the LEDs blink and the motors move.  Then press Ok. ', 'Test GoPiGo!', wx.OK|wx.ICON_INFORMATION)
+			dlg.ShowModal()
+			dlg.Destroy()
+			program = "sudo python /home/pi/Desktop/GoPiGo/Software/Python/hardware_test_2.py"
+			send_bash_command_in_background(program)
+
+		else:
+			# Run GrovePi Test.
+			dlg = wx.MessageDialog(self, 'Ok, start GrovePi Test. Attach buzzer to D8 and a button to A0.  Press the button and the buzzer should sound.  Press Ok to start. ', 'Test GrovePi!', wx.OK|wx.ICON_INFORMATION)
+			dlg.ShowModal()
+			dlg.Destroy()
+			program = "sudo python /home/pi/Desktop/GrovePi/Software/Python/GrovePi_Hardware_Test.py"
+			send_bash_command_in_background(program)
+
+		
 	def About(self, event):
 		write_debug("About Pressed.")	
 		dlg = wx.MessageDialog(self, 'Learn more about Dexter Industries and DexterEd at dexterindustries.com', 'About', wx.OK|wx.ICON_INFORMATION)
@@ -311,6 +338,7 @@ class MainPanel(wx.Panel):
 		"""
 		self.frame.Close()
   
+ 
 ########################################################################
 class MainFrame(wx.Frame):
 	""""""
